@@ -1,9 +1,15 @@
 // console.log("1 Roll, default value (6):", diceSimple())
 // console.log("1 Roll, 10:", diceSimple(1, 10))
 // console.log("10 Rolls, 10:", diceSimple(10, 10))
-console.log("10 Rolls, 'd10':", diceSimple(10, "d10"))
-console.log("10 Rolls, 'd10':", diceSimple(10, "dd10"))
-console.log("10 Rolls, 'd10':", diceSimple(10, "not a valid string"))
+// console.log("10 Rolls, 'd10':", diceSimple(10, "d10"))
+// console.log("10 Rolls, 'd10':", diceSimple(10, "dd10"))
+// console.log("10 Rolls, 'd10':", diceSimple(10, "not a valid string"))
+
+console.log("Advanced Roller: 1 Roll, default value (6):", diceAdvanced())
+// 7
+// console.log("Advanced Roller: 10 Rolls, 'd10':", diceAdvanced(10, "d10"))
+// console.log("Advanced Roller: 10 Rolls, 'd10':", diceAdvanced(10, "dd10"))
+// console.log("Advanced Roller: 10 Rolls, 'd10':", diceAdvanced(10, "not a valid string"))
 
 function diceSimple(numDice=1, dieType = 6)
 {
@@ -51,7 +57,53 @@ function diceSimple(numDice=1, dieType = 6)
     }
 }
 
-function diceAdvanced()
+function diceAdvanced(numDice=1, dieType=6)
 {
+    /**
+     * Goal: Use a Fisher-Yates shuffle to select a random value for a die instead of only using Math.random()
+     * Accept a parameter that determines the number of dice rolled (if no number is specified default to 1 die)
+     * Accept a parameter that determines the range of values on the dice (d2, d4, d8...etc)
+     * 
+     * Rolling a die: 
+     * - Create an array that includes the range of values on the indicated die ( d6 = [1, 2, 3, 4, 5, 6])
+     *  - Create a for loop that iterates from 1 to the designated value of the dieType. Each iteration pushes the value to the array
+     * - Use the Fisher Yates shuffle algorithm to randomize the array
+     *  - Create a for loop. Start at the end and decrement to zero.
+     *      - For each iteration: grab a random index
+     *      - Swap the current index value with the random index value generated
+     * - Use the Fisher-Yates algorithm to then select a random element in the array and remove it from the array
+     *      - For each iteration: grab a random index
+     *      - remove the index from the array
+     * - Repeat the process until one value remains
+     * - return the last value as the 'rolled' value
+     */
+
+    let dieValue =dieType
+    const valueArr = []
+    for(let i=1; i<=dieValue; i++)
+    {
+        valueArr.push(i)
+    }
+    //Shuffle the Array
+    for(let j=valueArr.length-1; j>0; j--)
+    {
+        const randomIndex = Math.floor(Math.random()*dieValue);
+        [valueArr[j], valueArr[randomIndex]] = [valueArr[randomIndex], valueArr[j]];
+    }
+    const shuffledArr=valueArr
+    console.log(shuffledArr)
+    shuffledArr.map(element=> 
+        {
+            if(shuffledArr.length != 1)
+            {
+                const randomIndex=  Math.floor(Math.random()*shuffledArr.length);
+                console.log("Random Index:", randomIndex);
+                shuffledArr.splice(randomIndex);
+                console.log(shuffledArr);
+            }
+        })
+    console.log("shuffled array: ", valueArr)
+
+    return shuffledArr[0]
 
 }
