@@ -1,8 +1,9 @@
-console.log("Hello World")
-
-console.log("1 Roll:", diceSimple())
-console.log("10 Rolls:", diceSimple(10, 10))
-console.log("10 Rolls, 'd12':", diceSimple(10, "d12"))
+// console.log("1 Roll, default value (6):", diceSimple())
+// console.log("1 Roll, 10:", diceSimple(1, 10))
+// console.log("10 Rolls, 10:", diceSimple(10, 10))
+console.log("10 Rolls, 'd10':", diceSimple(10, "d10"))
+console.log("10 Rolls, 'd10':", diceSimple(10, "dd10"))
+console.log("10 Rolls, 'd10':", diceSimple(10, "not a valid string"))
 
 function diceSimple(numDice=1, dieType = 6)
 {
@@ -19,28 +20,35 @@ function diceSimple(numDice=1, dieType = 6)
      *  Generate a random value that covers the range of values on a die (d6 = range of 1 to 6)
      */
     let dieValue=dieType
-    if(typeof dieType=== "string" && dieType[0]==="d")
+    if(typeof dieValue=== "string" && dieValue[0]==="d")
         {
             dieValue = dieType.slice(1)
+            console.log('sliced dieValue:', parseInt(dieValue, 10))
+            if(!parseInt(dieValue,10))
+            {
+                return `The value "${dieType}" is an improper format. Either pass an integer for dieType or pass a string using dice notation (for example 'd6', 'd8', etc..."` 
+            }
         }
-    else if(dieType==='string')
-        {
-            return "The die type was an improper format. Either pass an integer for dieType or pass a string using dice notation (for example 'd6', 'd8', etc..."
-        }
+    else if(typeof dieValue==='string')
+    {
+        return `The value "${dieType}" is an improper format Either. pass an integer for dieType or pass a string using dice notation (for example 'd6', 'd8', etc..."` 
+    }
 
     if(numDice===1)
     {
         return Math.floor((Math.random()*dieValue)+1)
     }
-
-    const arrOfValues = []
-    for(let i=0; i<numDice; i++)
-        {
-            const rolledValue = Math.floor((Math.random()*dieValue)+1)
-            
-            arrOfValues.push(rolledValue) 
-        } 
-    return arrOfValues
+    else
+    {
+        const arrOfValues = []
+        for(let i=0; i<numDice; i++)
+            {
+                const rolledValue = Math.floor((Math.random()*dieValue)+1)
+                
+                arrOfValues.push(rolledValue) 
+            } 
+        return arrOfValues
+    }
 }
 
 function diceAdvanced()
