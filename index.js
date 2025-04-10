@@ -1,15 +1,17 @@
-// console.log("1 Roll, default value (6):", diceSimple())
-// console.log("1 Roll, 10:", diceSimple(1, 10))
-// console.log("10 Rolls, 10:", diceSimple(10, 10))
-// console.log("10 Rolls, 'd10':", diceSimple(10, "d10"))
-// console.log("10 Rolls, 'd10':", diceSimple(10, "dd10"))
-// console.log("10 Rolls, 'd10':", diceSimple(10, "not a valid string"))
+const submitBtn = document.getElementById("submit-form")
+const diceDisplay= document.getElementById('dice-display')
+submitBtn.addEventListener('click', event =>
+{
+    event.preventDefault()
+    console.log("clicked")
 
-console.log("Advanced Roller: 1 Roll, default value (6):", diceAdvanced())
-// 7
-// console.log("Advanced Roller: 10 Rolls, 'd10':", diceAdvanced(10, "d10"))
-// console.log("Advanced Roller: 10 Rolls, 'd10':", diceAdvanced(10, "dd10"))
-// console.log("Advanced Roller: 10 Rolls, 'd10':", diceAdvanced(10, "not a valid string"))
+    const numberOfDice = document.getElementById("num-dice").value
+    const diceType = document.querySelector('input[name="dice-selector"]:checked').value
+    const diceRolled = diceAdvanced(numberOfDice,diceType)
+    diceDisplay.innerHTML = `<p>Dice Values Rolled: ${diceRolled.join(", ")}</p>`
+
+}
+)
 
 function diceSimple(numDice=1, dieType = 6)
 {
@@ -25,11 +27,14 @@ function diceSimple(numDice=1, dieType = 6)
      * Rolling a die:
      *  Generate a random value that covers the range of values on a die (d6 = range of 1 to 6)
      */
+
+    /**
+     * NEED TO ADD: string handling to lowercase the string before parsing
+     */
     let dieValue=dieType
     if(typeof dieValue=== "string" && dieValue[0]==="d")
         {
             dieValue = dieType.slice(1)
-            console.log('sliced dieValue:', parseInt(dieValue, 10))
             if(!parseInt(dieValue,10))
             {
                 return `The value "${dieType}" is an improper format. Either pass an integer for dieType or pass a string using dice notation (for example 'd6', 'd8', etc..."` 
@@ -59,6 +64,8 @@ function diceSimple(numDice=1, dieType = 6)
 
 function diceAdvanced(numDice=1, dieType=6)
 {
+    console.log("Number of Dice", numDice)
+    console.log("Detected Die Type",dieType)
     /**
      * Goal: Use a Fisher-Yates shuffle to select a random value for a die instead of only using Math.random()
      * Accept a parameter that determines the number of dice rolled (if no number is specified default to 1 die)
@@ -78,32 +85,37 @@ function diceAdvanced(numDice=1, dieType=6)
      * - return the last value as the 'rolled' value
      */
 
-    let dieValue =dieType
-    const valueArr = []
-    for(let i=1; i<=dieValue; i++)
+     /**
+     * NEED TO ADD: string handling to lowercase the string before parsing
+     */
+     let dieValue=dieType
+     if(typeof dieValue=== "string" && dieValue[0]==="d")
+         {
+             dieValue = dieType.slice(1)
+             if(!parseInt(dieValue,10))
+             {
+                 return `The value "${dieType}" is an improper format. Either pass an integer for dieType or pass a string using dice notation (for example 'd6', 'd8', etc..."` 
+             }
+         }
+     else if(typeof dieValue==='string')
+     {
+         return `The value "${dieType}" is an improper format Either. pass an integer for dieType or pass a string using dice notation (for example 'd6', 'd8', etc..."` 
+     }
+    const diceValueArr = []
+    const finalValues = []
+
+    for(let i=0;i<numDice;i++)
     {
-        valueArr.push(i)
-    }
-    //Shuffle the Array
-    for(let j=valueArr.length-1; j>0; j--)
-    {
-        const randomIndex = Math.floor(Math.random()*dieValue);
-        [valueArr[j], valueArr[randomIndex]] = [valueArr[randomIndex], valueArr[j]];
-    }
-    const shuffledArr=valueArr
-    console.log(shuffledArr)
-    shuffledArr.map(element=> 
-        {
-            if(shuffledArr.length != 1)
+        for(let j=1; j<=dieValue; j++)
             {
-                const randomIndex=  Math.floor(Math.random()*shuffledArr.length);
-                console.log("Random Index:", randomIndex);
-                shuffledArr.splice(randomIndex);
-                console.log(shuffledArr);
+                diceValueArr.push(j)
             }
-        })
-    console.log("shuffled array: ", valueArr)
-
-    return shuffledArr[0]
-
+        for(let k=diceValueArr.length-1; k>0; k--)
+        {
+            const randomIndex = Math.floor(Math.random()*dieValue);
+            [diceValueArr[k], diceValueArr[randomIndex]] = [diceValueArr[randomIndex], diceValueArr[k]];
+        }
+        finalValues.push(diceValueArr[Math.floor(Math.random()*dieValue)])
+    }
+    return finalValues 
 }
